@@ -10,7 +10,7 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
     # Primero llena un vector columna con las funciones contenidas en el documento de texto
     vectFun = Llenar_Vector_Funciones(nombre)
     # Despues crea un vector de flotantes que contendra los valores de las variables dados por el usuario   
-    vectSol = np.array([ 2, 3, 4], dtype = 'f')
+    vectSol = np.array([ 1, 2, 3], dtype = 'f')
 
     # Se usa para considerar una presicion de 6
     np.set_printoptions(precision = 6, suppress = True)
@@ -82,6 +82,7 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
 def Pto_Fij(FNombre):
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
+    print()
     print(Metodo_Punto_Fijo(error, lim, FNombre))
 
 if __name__ == "__main__":

@@ -11,7 +11,7 @@ def Llenar_Vector_Funciones(nombreArchTxt):
         archFun = open(f"{nombreArchTxt}.txt", "r")  
     except:
         print("\nNo es posible abrir el archivo")
-        print("Crea un archivo de texto nuevo e ingresa las funciones ahí, guardalo con el formato 'txt' vuelve a correr el programa\n")
+        print("Crea un archivo de texto nuevo e ingresa las funciones ahí, guardalo con el formato 'txt' y vuelve a correr el programa\n")
         sys.exit(1)
 
     contFun = 0

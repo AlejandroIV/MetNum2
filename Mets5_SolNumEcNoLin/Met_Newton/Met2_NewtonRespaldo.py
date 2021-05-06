@@ -114,6 +114,7 @@ def Metodo_Newton(tolerancia, limite, nombre, opcion):
 def Newt(FNombre, op):
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
+    print()
     print(Metodo_Newton(error, lim, FNombre, op))
 
 if __name__ == "__main__":

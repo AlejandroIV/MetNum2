@@ -153,6 +153,7 @@ def Metodo_Broyden(tolerancia, limite, nombre):
 def Broy(FNombre):
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
+    print()
     print(Metodo_Broyden(error, lim, FNombre))
 
 if __name__ == "__main__":

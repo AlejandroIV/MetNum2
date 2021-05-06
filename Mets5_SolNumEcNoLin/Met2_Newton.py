@@ -11,7 +11,7 @@ def Metodo_Newton(tolerancia, limite, nombre, opcion):
     # Primero llena un vector columna con las funciones contenidas en el documento de texto
     vectFun = Llenar_Vector_Funciones(nombre)
     # Despues crea un vector de flotantes que contendra los valores de las variables dados por el usuario   
-    vectSol = np.array([2,6,4], dtype = 'f')
+    vectSol = np.array([1,1,-1], dtype = 'f')
     vectSol = np.reshape(vectSol, (vectSol.shape[0], 1))
     # Declara las variables para poder calcular el jacobiano
     x,y,z = var('x','y','z')
@@ -115,6 +115,7 @@ def Metodo_Newton(tolerancia, limite, nombre, opcion):
 def Newt(FNombre, op):
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
+    print()
     print(Metodo_Newton(error, lim, FNombre, op))
 
 if __name__ == "__main__":

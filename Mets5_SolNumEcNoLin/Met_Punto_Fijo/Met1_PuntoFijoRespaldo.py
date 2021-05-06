@@ -80,6 +80,7 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
 def Pto_Fij(FNombre):
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
+    print()
     print(Metodo_Punto_Fijo(error, lim, FNombre))
 
 if __name__ == "__main__":
