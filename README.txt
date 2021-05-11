@@ -15,3 +15,7 @@ En el archivo "FunMul.txt" se muestra un ejemplo de como se deben ingresar las e
 Los archivos de texto con las expresiones se deben guardar en la misma ruta que el archivo "mainMetNum2.py".
 
 En caso de no saber como ingresar la expresión, puede consultar la documentación de SageMath.
+
+Para ingresar los datos para aplicar cualquier método de interpolación es necesario crear un archivo de texto con formato '.txt' y escribir los datos como en el ejemplo "Datos.txt".
+Los datos deben estar entre paréntesis, los elementos dentro del paréntesis deben estar separados por una coma sin añadir espacios adicionales, y los diferentes pares ordenados deben estar separados únicamente por un espacio. En el archivo "Datos.txt" se puede observar un ejemplo.
+Los archivos de texto con los datos se deben guardar en la misma ruta que el archivo "mainMetNum2.py".
