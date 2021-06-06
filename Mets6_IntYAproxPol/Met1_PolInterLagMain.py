@@ -1,9 +1,9 @@
-"""Modulo que contiene el codigo para construir el Polinomio Interpolante de Lagrange y el Método de Neville"""
+"""Modulo que contiene el codigo para construir el Polinomio Interpolante de Lagrange"""
 
-from sage.all import *
+from sage.all import SR, sage, round
 import sys
 import numpy as np
-from Mets6_IntYAproxPol.Mods_Preparar_Metodos.Preparar_Programa import LLenar_Matriz_Datos, OpcionesLag
+from Mods_Preparar_Metodos.Preparar_Programa import LLenar_Matriz_Datos, OpcionesLag
 
 def Interpolacion_Lagrange(nombre):
     """Funcion que construira el Polinomio Interpolante de Lagrange"""

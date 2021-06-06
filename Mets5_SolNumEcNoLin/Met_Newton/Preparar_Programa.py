@@ -1,6 +1,6 @@
 """Modulo que contiene las funciones necesarias para preparar el codigo para el modulo 'Met2_Newton.py'"""
 
-from sage.all import *
+from sage.all import SR
 import sys
 import numpy as np
 
@@ -91,7 +91,7 @@ def Identificar_Variables(nombreArchTxt):
 
     return listaVar
 
-def Escribir_Programa(listaVariables, opcion):
+def Escribir_Programa(listaVariables):
     # Abre el archivo de texto con el codigo en modo lectura
     fin = open("Mets5_SolNumEcNoLin/Met_Newton/Codigo.txt", "r")
     # Abre el archivo '.py' para escribir el codigo en modo escritura
@@ -137,7 +137,7 @@ def Escribir_Programa(listaVariables, opcion):
             fout.write(cadena)
         # Agrega la cuarta fila que se debe modificar
         elif linea.startswith("CUARTA4"):
-            cadena = f"                    mtrzY[cont1, cont2] = (-1 ** {opcion}) * (vectFun[cont1][0].subs("
+            cadena = f"                    mtrzY[cont1, cont2] = (-1) * (vectFun[cont1][0].subs("
             cont = 0
             for elemento in listaVariables:
                 indiceIn = elemento.find("=")
@@ -146,6 +146,7 @@ def Escribir_Programa(listaVariables, opcion):
             cadena = cadena[:(len(cadena) - 1)]
             cadena += "))\n"
             fout.write(cadena)
+        # Agrega la quinta fila que se debe modificar
         elif linea.startswith("QUINTA5"):
             cadena = "                mtrzY[cont1, cont2] = matJac[cont1, cont2].subs("
             cont = 0

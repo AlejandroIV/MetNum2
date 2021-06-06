@@ -1,9 +1,8 @@
 """Modulo que contiene el Metodo de Newton Modificado para la solucion de sistemas de ecuaciones no lineales"""
 
-from sage.all import *
 import sys
 import numpy as np
-from Mets5_SolNumEcNoLin.Met_Punto_Fijo.Preparar_Programa import Llenar_Vector_Funciones
+from Met_Punto_Fijo.Preparar_Programa import Llenar_Vector_Funciones
 
 def Metodo_Punto_Fijo(tolerancia, limite, nombre):
     """Funcion que llevara a cabo el Metodo del Punto Fijo"""
@@ -21,12 +20,6 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
     # Crea la matriz que contendra los valores obtenidos en cada iteracion para poder imprimirlos
     matIter = np.copy(vectSol)
     matIter = np.append(matIter, 0)
-
-    print('-' * (15 * vectSol.shape[0]))
-    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
-    print((' ' * 5) + 'y' + (' ' * 4), sep = '', end = '')
-    print((' ' * 5) + 'z' + (' ' * 4), sep = '', end = '')
-    print((' ' * 6) + 'error')
 
     contIt = 0
     # Bucle que se repetira hasta que el error sea menor o igual al permitido
@@ -68,6 +61,12 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
         # Se copia el valor de 'normaX2' en la variable 'normaX1' para que en la siguiente iteracion se considere la norma que se acaba de calcular
         norma1 = norma2
 
+    print('-' * (15 * vectSol.shape[0]))
+    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
+    print((' ' * 5) + 'y' + (' ' * 4), sep = '', end = '')
+    print((' ' * 5) + 'z' + (' ' * 4), sep = '', end = '')
+    print((' ' * 6) + 'error')
+
     matIter = np.reshape(matIter, ((contIt + 1), (vectSol.shape[0] + 1)))
 
     print("-" * (15 * vectSol.shape[0]))
@@ -86,7 +85,8 @@ def Pto_Fij(FNombre):
     print(Metodo_Punto_Fijo(error, lim, FNombre))
 
 if __name__ == "__main__":
+    FNombre = input("Ingresa el nombre del archivo: ")
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
-    FNombre = input("Ingresa el nombre del archivo: ")
+    print()
     print(Metodo_Punto_Fijo(error, lim, FNombre))

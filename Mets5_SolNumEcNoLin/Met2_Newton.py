@@ -1,27 +1,27 @@
 """Modulo que contiene el Metodo de Newton Modificado para la solucion de sistemas de ecuaciones no lineales"""
 
-from sage.all import *
+from sage.all import SR, jacobian, var
 import sys
 import numpy as np
-from Mets5_SolNumEcNoLin.Met_Newton.Preparar_Programa import Llenar_Vector_Funciones
-from Mets5_SolNumEcNoLin.Met_Newton import Met_Jacobi
+from Met_Newton.Preparar_Programa import Llenar_Vector_Funciones
 
 def Metodo_Newton(tolerancia, limite, nombre, opcion):
     """Funcion que llevara a cabo el Metodo de Newton"""
     # Primero llena un vector columna con las funciones contenidas en el documento de texto
     vectFun = Llenar_Vector_Funciones(nombre)
     # Despues crea un vector de flotantes que contendra los valores de las variables dados por el usuario   
-    vectSol = np.array([1], dtype = 'f')
+    vectSol = np.array([1.5,3.5], dtype = 'f')
     vectSol = np.reshape(vectSol, (vectSol.shape[0], 1))
     # Declara las variables para poder calcular el jacobiano
-    x = var('x')
+    x,y = var('x','y')
 
     # Crea la matriz que contendra el jacobiano de las funciones
     matJac = np.empty(0, dtype = type(SR()))
     # Bucle que recorre todo el vector de funciones para calcular la matriz jacobiana y almacenarla en matJac
     for funcion in vectFun:
         # Ira calculando el jacobiano de cada fila
-        filaJac = jacobian(funcion[0], (x))
+        filaJac = jacobian(funcion[0], (x,y))
+        # Se selecciona 'funcion[0]' porque 'funcion' es una lista
         # Bucle que ira agregando las funciones una por una para separarlas
         for derPar in filaJac[0]:
             matJac = np.append(matJac, derPar)
@@ -41,28 +41,25 @@ def Metodo_Newton(tolerancia, limite, nombre, opcion):
     matIter = np.copy(vectSol)
     matIter = np.append(matIter, 0)
 
-    print('-' * (15 * vectSol.shape[0]))
-    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
-    print((' ' * 6) + 'error')
-
     contIt = 0
     # Bucle que se repetira hasta que el error sea menor o igual al permitido
-    while(True):
+    while True:
         # Bucle anidado que evaluara cada una de las funciones que hay en la matriz jacobiana y cada una que hay
-        # en el vector columna que Itiene las funciones y los resultados los ira almacenando en la matriz 'mtrzY'
+        # en el vector columna que tiene las funciones y los resultados los ira almacenando en la matriz 'mtrzY'
         for cont1 in range(matJac.shape[0]):
             for cont2 in range(matJac.shape[0] + 1):
-                # Cuando se cumple la condicion quiere decir que ahora hay que considerar la funcion del vector de funciones con signo negativo
+                # Cuando se cumple la condicion quiere decir que ahora hay que considerar la funcion del vector de funciones
                 if cont2 == matJac.shape[0]:
-                    mtrzY[cont1, cont2] = (-1 ** 2) * (vectFun[cont1][0].subs(x = vectSol[0, 0]))
+                    # Se cambiara de signo cuando se evaluen las funciones
+                    mtrzY[cont1, cont2] = (-1) * (vectFun[cont1][0].subs(x = vectSol[0, 0],y = vectSol[1, 0]))
                     continue
-                mtrzY[cont1, cont2] = matJac[cont1, cont2].subs(x = vectSol[0, 0])
+                mtrzY[cont1, cont2] = matJac[cont1, cont2].subs(x = vectSol[0, 0],y = vectSol[1, 0])
 
         if opcion == 1:
             # Manda a llamar a la funcion "Jacobi" para resolver el sistema de ecuaciones
-            vectY = Met_Jacobi.Jacobi(tolerancia, limite, mtrzY, vectSol)
+            vectY = Met_Jacobi.Jacobi(mtrzY)
         else:
-            # Calula la inversa del jacobiano y lo multiplica por el vector que contiene como valores las funciones evaluadas
+            # Calula la inversa del jacobiano y lo multiplica por el vector que contiene como valores las funciones evaluadas con signo negativo
             vectY = np.matmul(np.linalg.inv(mtrzY[:, :(matJac.shape[0])]), np.reshape(mtrzY[:, (matJac.shape[0]):], (matJac.shape[0], 1)))
 
         vectSol += vectY
@@ -98,6 +95,11 @@ def Metodo_Newton(tolerancia, limite, nombre, opcion):
         # Se copia el valor de 'normaX2' en la variable 'normaX1' para que en la siguiente iteracion se considere la norma que se acaba de calcular
         normaX1 = normaX2
 
+    print('-' * (15 * vectSol.shape[0]))
+    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
+    print((' ' * 5) + 'y' + (' ' * 4), sep = '', end = '')
+    print((' ' * 6) + 'error')
+
     matIter = np.reshape(matIter, ((contIt + 1), (vectSol.shape[0] + 1)))
 
     print("-" * (15 * vectSol.shape[0]))
@@ -117,12 +119,16 @@ def Newt(FNombre, op):
     print(Metodo_Newton(error, lim, FNombre, op))
 
 if __name__ == "__main__":
-    error = float(input("Ingresa la tolerancia: "))
-    lim = float(input("Ingresa el limite de iteraciones: "))
+    sys.path.append("..//")
+    import Met_Jacobi
     FNombre = input("Ingresa el nombre del archivo: ")
     print("\nElije alguna de las siguientes opciones: ")
     print("1 - Usar el Metodo de Jacobi para determinar el valor del vector 'y'")
     print("2 - Calcular la inversa de la matriz jacobiana para determinar el valor del vector 'y'")
     opc = int(input("Opcion: "))
     print()
+    error = float(input("Ingresa la tolerancia: "))
+    lim = float(input("Ingresa el limite de iteraciones: "))
     print(Metodo_Newton(error, lim, FNombre, opc))
+else:
+    import Met_Jacobi

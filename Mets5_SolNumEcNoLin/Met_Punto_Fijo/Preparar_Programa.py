@@ -1,6 +1,6 @@
 """Modulo que contiene las funciones necesarias para preparar el codigo para el modulo 'Met1_PuntoFijo.py'"""
 
-from sage.all import *
+from sage.all import SR
 import sys
 import numpy as np
 

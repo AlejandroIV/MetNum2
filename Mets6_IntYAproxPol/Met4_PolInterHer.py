@@ -1,27 +1,32 @@
-"""Modulo que contiene el codigo para construir el Polinomio Interpolante de Newton"""
+"""Modulo que contiene el codigo para construir el Polinomio de Hermite"""
 
 from sage.all import SR, sage, round
 import sys
 import numpy as np
-from Mods_Preparar_Metodos.Preparar_Programa import LLenar_Matriz_Datos, OpcionesDifDiv
+from Mods_Preparar_Metodos.Preparar_Programa import LLenar_Matriz_Datos_Hermite, OpcionesHer
 
-def Interpolacion_Diferencias_Divididas(nombre):
-    """Funcion que construira el Polinomio Interpolante de Newton"""
+def Interpolacion_Hermite(nombre):
+    """Funcion que construira el Polinomio Interpolante de Hermite"""
     # Primero llena una matriz con los datos contenidos en el documento de texto
-    matDatos = LLenar_Matriz_Datos(nombre)
-    # Une la matriz 'matDatos' con otra matriz de ceros de orden n x n - 1, donde n es el numero de datos
-    matDatos = np.copy(np.append(matDatos, np.zeros((matDatos.shape[0], (matDatos.shape[0] - 1)), dtype = 'f'), axis = 1))
+    matDatos = LLenar_Matriz_Datos_Hermite(nombre)
+    # Une la matriz 'matDatos' con otra matriz de ceros de orden n x n - 2, donde n es el numero de datos
+    matDatos = np.copy(np.append(matDatos, np.zeros((matDatos.shape[0], (matDatos.shape[0] - 2)), dtype = 'f'), axis = 1))
 
     # Bucle que se repetira hasta calcular la ultima diferencia dividida posible
-    # Este contador se utilizara para indexar los valores de las columnas de 'matDatos' [Burden p. 124]
+    # Este contador se utilizara para indexar los valores de las columnas de 'matDatos' [Burden p. 138]
     for cont1 in range(1, matDatos.shape[0]):
         #  Este contador se utilizara para indexar los valores de las filas de 'matDatos'
         cont2 = 0
         # Bucle que calcula los elementos de la tabla de diferencias divididas
         for elemRengl in range(cont1, matDatos.shape[0]):
-            # La variable 'elemRengl' va a indexar la fila del valor de x que se va a usar en el minuendo (primer elemento de la resta)
-            matDatos[cont2, (cont1 + 1)] = (matDatos[(cont2 + 1), cont1] - matDatos[cont2, cont1]) / (matDatos[elemRengl, 0] - matDatos[cont2, 0])
-            cont2 += 1
+            # La variable 'elemRengl' va a indexar la fila del valor de x que se va a usar en el minuendo (primer elemento de la resta) [Burden p. 138]
+            # Condicional que se saltara algunos calculos de los elementos de la columna de la primera diferencia dividida
+            if cont1 != 1 or (matDatos[elemRengl, 0] - matDatos[cont2, 0]) != 0:
+                matDatos[cont2, (cont1 + 1)] = (matDatos[(cont2 + 1), cont1] - matDatos[cont2, cont1]) / (matDatos[elemRengl, 0] - matDatos[cont2, 0])
+                cont2 += 1
+            else:
+                # En las ocasiones en las que no se salte el calculo se aumenta el 'cont2' para seguir indexando a la matriz 'matDatos'
+                cont2 += 1
 
     np.set_printoptions(precision = 6, suppress = True)
 
@@ -56,7 +61,7 @@ def Interpolacion_Diferencias_Divididas(nombre):
     polinomio = polinomio[:(len(polinomio) - 1)]
 
     # Pide al usuario que elija una opcion
-    opcion = OpcionesDifDiv()
+    opcion = OpcionesHer()
 
     if opcion == 1:
         # Imprime el polinomio interpolante
@@ -88,9 +93,9 @@ def Interpolacion_Diferencias_Divididas(nombre):
         # Simplifica el resultado y lo imprime redondeandolo a 8 decimales
         print(f"\n\nEl valor de la funcion en el punto {x} es aproximadamente: {round(polinomio.simplify_full(), 8)}\n")
 
-def DiferenciasDivididas():
+def Hermite():
     fNombre = input("Escribe el nombre del archivo sin escribir la extension '.txt': ")
-    Interpolacion_Diferencias_Divididas(fNombre)
+    Interpolacion_Hermite(fNombre)
 
 if __name__ == "__main__":
-    Interpolacion_Diferencias_Divididas("prueba")
+    Interpolacion_Hermite("prueba")

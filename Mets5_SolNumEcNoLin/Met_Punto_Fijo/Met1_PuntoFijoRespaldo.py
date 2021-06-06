@@ -1,16 +1,15 @@
 """Modulo que contiene el Metodo de Newton Modificado para la solucion de sistemas de ecuaciones no lineales"""
 
-from sage.all import *
 import sys
 import numpy as np
-import Preparar_Programa
+from Met_Punto_Fijo.Preparar_Programa import Llenar_Vector_Funciones
 
 def Metodo_Punto_Fijo(tolerancia, limite, nombre):
     """Funcion que llevara a cabo el Metodo del Punto Fijo"""
     # Primero llena un vector columna con las funciones contenidas en el documento de texto
-    vectFun = Preparar_Programa.Llenar_Vector_Funciones(nombre)
+    vectFun = Llenar_Vector_Funciones(nombre)
     # Despues crea un vector de flotantes que contendra los valores de las variables dados por el usuario   
-    vectSol = np.array([ 1.5,], dtype = 'f')
+    vectSol = np.array([ 1, 2, 3], dtype = 'f')
 
     # Se usa para considerar una presicion de 6
     np.set_printoptions(precision = 6, suppress = True)
@@ -22,17 +21,13 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
     matIter = np.copy(vectSol)
     matIter = np.append(matIter, 0)
 
-    print('-' * (15 * vectSol.shape[0]))
-    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
-    print((' ' * 6) + 'error')
-
     contIt = 0
     # Bucle que se repetira hasta que el error sea menor o igual al permitido
     while True:
         cont = 0
         # Bucle que recorrera todas las funciones contenidas en 'vectFun' y las evaluara
         while cont < np.size(vectSol):
-            vectSol[cont] = vectFun[cont, 0].subs(x = vectSol[0], )
+            vectSol[cont] = vectFun[cont, 0].subs(x = vectSol[0],y = vectSol[1],z = vectSol[2],)
             cont += 1
 
         contIt += 1
@@ -66,6 +61,12 @@ def Metodo_Punto_Fijo(tolerancia, limite, nombre):
         # Se copia el valor de 'normaX2' en la variable 'normaX1' para que en la siguiente iteracion se considere la norma que se acaba de calcular
         norma1 = norma2
 
+    print('-' * (15 * vectSol.shape[0]))
+    print((' ' * 5) + 'x' + (' ' * 4), sep = '', end = '')
+    print((' ' * 5) + 'y' + (' ' * 4), sep = '', end = '')
+    print((' ' * 5) + 'z' + (' ' * 4), sep = '', end = '')
+    print((' ' * 6) + 'error')
+
     matIter = np.reshape(matIter, ((contIt + 1), (vectSol.shape[0] + 1)))
 
     print("-" * (15 * vectSol.shape[0]))
@@ -84,7 +85,8 @@ def Pto_Fij(FNombre):
     print(Metodo_Punto_Fijo(error, lim, FNombre))
 
 if __name__ == "__main__":
+    FNombre = input("Ingresa el nombre del archivo: ")
     error = float(input("Ingresa la tolerancia: "))
     lim = float(input("Ingresa el limite de iteraciones: "))
-    FNombre = input("Ingresa el nombre del archivo: ")
+    print()
     print(Metodo_Punto_Fijo(error, lim, FNombre))

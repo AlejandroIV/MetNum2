@@ -1,11 +1,11 @@
-"""Modulo que contiene las funciones necesarias para preparar el codigo para el modulo 'Met1_PolInterLagMain.py'"""
+"""Modulo que contiene las funciones necesarias para preparar los modulos que contienen los metodos de interpolacion"""
 
 from sage.all import *
 import sys
 import numpy as np
 
 def LLenar_Matriz_Datos(nombreArchTxt):
-    """Funcion que lee un archivo de texto, extrae los datos ingresados y las almacena en una matriz"""
+    """Funcion que lee un archivo de texto, extrae los datos ingresados y los almacena en una matriz para aplicar los metodos de interpolacion"""
     try:
         archDts = open(f"{nombreArchTxt}.txt", "r")
     except:
@@ -16,10 +16,10 @@ def LLenar_Matriz_Datos(nombreArchTxt):
     dts = ""
     # Bucle que recorre todo el archivo
     for parr in archDts:
-        # Guarda el la variable 'dts' la cadena de texto con los datos que hay en el archivo de texto en formato 'str'
+        # Guarda en la variable 'dts' la cadena de texto con los datos que hay en el archivo de texto en formato 'str'
         dts += parr
 
-    # Separa los datos delimitados por comas
+    # Separa los datos delimitados por espacios
     dts = dts.split(' ')
 
     # Crea una matriz para almacenar los datos extraidos del archivo de texto
@@ -28,7 +28,7 @@ def LLenar_Matriz_Datos(nombreArchTxt):
     cont = 0
     # Bucle que recorre la lista con todos los datos ingresados por el usuario en el archivo de texto para separarlos
     for dato in dts:
-        # Variables auxiliares el indice de los caracteres que se usan para delimitar los datos y hacer las separacion de los mismos
+        # Variables auxiliares que son los indices de los caracteres que se usan para delimitar los datos y separarlos
         indParentesis1 = dato.find("(")
         indParentesis2 = dato.find(")")
         indComa = dato.find(",")
@@ -46,7 +46,54 @@ def LLenar_Matriz_Datos(nombreArchTxt):
     # Cierra el archivo
     archDts.close()
 
-    # Regresa la matriz con los datos leidos desde el archivo de texto
+    # Regresa la matriz con los datos extraidos desde el archivo de texto
+    return matDts
+
+def LLenar_Matriz_Datos_Hermite(nombreArchTxt):
+    """Funcion que lee un archivo de texto, extrae los datos ingresados y los almacena en una matriz para aplicar el metodo de Interpolacion de Hermite"""
+    try:
+        archDts = open(f"{nombreArchTxt}.txt", "r")
+    except:
+        print("\nNo es posible abrir el archivo")
+        print("Crea un archivo de texto e ingresa los datos ahí, guardalo con el formato 'txt' y vuelve a correr el programa\n")
+        sys.exit(1)
+
+    dts = ""
+    # Bucle que recorre todo el archivo
+    for parr in archDts:
+        # Guarda en la variable 'dts' la cadena de texto con los datos que hay en el archivo de texto en formato 'str'
+        dts += parr
+
+    # Separa los datos delimitados por espacios
+    dts = dts.split(' ')
+
+    # Crea una matriz para almacenar los datos extraidos del archivo de texto
+    matDts = np.zeros(((len(dts) * 2), 3), dtype = 'f')
+
+    cont = 0
+    # Bucle que recorre la lista con todos los datos ingresados por el usuario en el archivo de texto para separarlos
+    for dato in dts:
+        # Variables auxiliares que son los indices de los caracteres que se usan para delimitar los datos y separarlos
+        indParentesis1 = dato.find("(")
+        indParentesis2 = dato.find(")")
+        indComa1 = dato.find(",")
+        indComa2 = dato.find(",", (indComa1 + 1))
+
+        # Trata de convertir los datos en formato 'double' y los almacena en 'matDts'
+        try:
+            matDts[cont:(cont + 2), 0] = float(dato[(indParentesis1 + 1):indComa1])
+            matDts[cont:(cont + 2), 1] = float(dato[(indComa1 + 1):indComa2])
+            matDts[cont, 2] = float(dato[(indComa2 + 1):indParentesis2])
+        except:
+            print("\nAlguno de los datos no se ha podido convertir en un formato compatible que pueda usar el programa")
+            print("Debe ingresar numeros para poder continuar\n")
+            sys.exit(1)
+        cont += 2
+
+    # Cierra el archivo
+    archDts.close()
+
+    # Regresa la matriz con los datos extraidos desde el archivo de texto
     return matDts
 
 def OpcionesLag(matDats):
@@ -78,7 +125,7 @@ def OpcionesLag(matDats):
     # Crea la variable 'indiceFilas' para saber cuales son los datos que el usuario desea utilizar y la opcion que elije el usuario
     indicesFilas = list()
 
-    # Si el usuario elige la opcion 1 entonces se construye el polinomio interpolante de lagrange
+    # Si el usuario elige usar la formula de lagrange
     if op == 1 or op == 2:
         # Bucle para pedir al usuario que ingrese la cantidad de elementos que desee utilizar
         while True:
@@ -136,11 +183,11 @@ def OpcionesDifDiv():
 
     return op
 
-def OpcionesNet():
-    """Funcion que pedira al usuario elegir una opcion en la que se aplica la interpolacion de newton"""
-    # Pide al usuario que lija una de las siguientes opciones
-    print("\n1.- Aplicar la Formula de Interpolacion de Newton hacia adelante")
-    print("2.- Aplicar la Formula de Interpolacion de Newton hacia atras")
+def OpcionesHer():
+    """Funcion que pedira al usuario elegir una opcion en la que se aplica la interpolacion de hermite"""
+    # Pide al usuario que elija una de las siguiente opciones
+    print("\n1.- Construir el Polinomio Interpolante de Hermite")
+    print("2.- Aproximar la funcion en un punto usando el Polinomio Oscultante")
 
     while True:
         try:
@@ -153,7 +200,7 @@ def OpcionesNet():
 
     return op
 
-def Modificar_Matriz(matriz):
+def Modificar_Matriz_DifRegr(matriz):
     """Funcion que modifica la matriz para poder aplicar la formula de interpolacion de newton hacia atras"""
     # Se crea una matriz auxiliar para ir almacenando los datos de la matriz en forma modificada
     matAux = np.empty((matriz.shape[0], 1), dtype = 'f')
@@ -179,5 +226,76 @@ def Modificar_Matriz(matriz):
 
     return matriz
 
+def AlgoritmoNet():
+    """Funcion que pedira al usuario elegir que algoritmo de diferencias divididas de newton aplicar"""
+    # Pide al usuario que elija una de las siguientes opciones
+    print("\n1.- Aplicar la Formula de Interpolacion de Newton hacia adelante")
+    print("2.- Aplicar la Formula de Interpolacion de Newton hacia atras")
+
+    while True:
+        try:
+            op = int(input("\nElija una opcion: "))
+            if op > 0 and op < 3:
+                break
+            print("Opcion invalida!!!")
+        except:
+            print("Opcion invalida!!!")
+
+    return op
+
+def AlgoritmoTraz():
+    """Funcion que pedira al usuario elegir que algoritmo de trazador cubico aplicar"""
+    # Pide al usuario que elija una de las siguientes opciones
+    print("\nElija el algoritmo que desee aplicar")
+    print("1.- Trazador cubico natural")
+    print("2.- Trazador cubico sujeto")
+    # Crea la lista que contendra los valores que ingrese el usuario para aplicar el metodo de trazadores cubicos
+    lista = []
+
+    while True:
+        try:
+            op = int(input("\nElija una opcion: "))
+            if op > 0 and op < 3:
+                break
+            print("Opcion invalida!!!")
+        except:
+            print("Opcion invalida!!!")
+
+    # Ingresa la opcion elegida por el usuario en la lista 'lista'
+    lista.append(op)
+
+    # Si el usuario elije usar el algoritmo para construir la tabla aplicando el algoritmo de trazador cubico sujeto
+    if op == 2:
+        contAux = 0
+        # Tupla que almacenara los valores de las derivadas
+        tupla = ()
+        derAux = ["inferior", "superior"]
+        while contAux < 2:
+            try:
+                deriv = float(input(f"\nIngrese la derivada del punto {derAux[contAux]}: "))
+                contAux += 1
+                # Agrega el valor de la derivada que ingresa el usuario a la tupla 'tupla'
+                tupla += (deriv,)
+            except:
+                print("Ingrese un valor numerico!!!")
+        # Ingresa los valores de las derivadas a la lista 'lista'
+        lista.append(tupla)
+
+    return lista
+
+def RelacionMinCuad():
+    """Funcion que pedira al usuario que indique si los datos tienen una relacion exponencial"""
+    # Pide al usuario que indique si los datos tiene una relacion exponencial
+    while True:
+        try:
+            op = int(input("Los datos tienen relacion exponencial?\nSi - 1    No - 0: "))
+            if op > -1 and op < 2:
+                break
+            print("Opcion invalida!!!")
+        except:
+            print("Opcion invalida!!!")
+
+    return op
+
 if __name__ == "__main__":
-    print(LLenar_Vector_Datos("prueba"))
+    print(LLenar_Matriz_Datos_Hermite("prueba"))
