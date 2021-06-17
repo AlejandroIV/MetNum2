@@ -25,7 +25,8 @@ def Interpolacion_Diferencias_Divididas(nombre):
 
     np.set_printoptions(precision = 6, suppress = True)
 
-    print(f"\n{matDatos}\n")
+    # Imprime la matriz 'matDatos'
+    print("\n" + "\n".join([''.join(['{:12}'.format(round(val, 6)) for val in fila]) for fila in matDatos]) + "\n")
 
     # Pide al usuario el grado del polinomio
     while True:

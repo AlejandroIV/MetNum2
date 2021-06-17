@@ -1,4 +1,4 @@
-"""Modulo que contiene el Metodo de Newton Modificado para la solucion de sistemas de ecuaciones no lineales"""
+"""Modulo que contiene el Metodo del Punto Fijo para la solucion de sistemas de ecuaciones no lineales"""
 
 import sys
 import numpy as np

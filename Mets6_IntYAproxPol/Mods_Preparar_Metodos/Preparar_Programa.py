@@ -1,6 +1,5 @@
 """Modulo que contiene las funciones necesarias para preparar los modulos que contienen los metodos de interpolacion"""
 
-from sage.all import *
 import sys
 import numpy as np
 
@@ -131,7 +130,7 @@ def OpcionesLag(matDats):
         while True:
             try:
                 cantDts = int(input("\nIngrese la cantidad de datos que desee usar: "))
-                if cantDts > 0 and cantDts < (matDats.shape[0] + 1):
+                if cantDts > 1 and cantDts < (matDats.shape[0] + 1):
                     break
                 print("Cantidad de elementos invalida!!!")
             except:
@@ -288,7 +287,7 @@ def RelacionMinCuad():
     # Pide al usuario que indique si los datos tiene una relacion exponencial
     while True:
         try:
-            op = int(input("Los datos tienen relacion exponencial?\nSi - 1    No - 0: "))
+            op = int(input("\nLos datos tienen relacion exponencial?\nSi - 1    No - 0: "))
             if op > -1 and op < 2:
                 break
             print("Opcion invalida!!!")

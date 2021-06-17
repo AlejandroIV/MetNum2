@@ -36,7 +36,8 @@ def Interpolacion_Newton_Adelante_Atras(nombre):
         fila = matDatos.shape[0] - 1
         matDatos = Modificar_Matriz_DifRegr(matDatos)
 
-    print(f"\n{matDatos}\n")
+    # Imprime la matriz 'matDatos'
+    print("\n" + "\n".join([''.join(['{:12}'.format(round(val, 6)) for val in fila]) for fila in matDatos]) + "\n")
 
     # Pide al usuario el grado del polinomio
     while True:

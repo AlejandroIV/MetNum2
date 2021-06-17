@@ -28,9 +28,8 @@ def Interpolacion_Hermite(nombre):
                 # En las ocasiones en las que no se salte el calculo se aumenta el 'cont2' para seguir indexando a la matriz 'matDatos'
                 cont2 += 1
 
-    np.set_printoptions(precision = 6, suppress = True)
-
-    print(f"\n{matDatos}\n")
+    # Imprime la matriz 'matDatos'
+    print("\n" + "\n".join([''.join(['{:12}'.format(round(val, 6)) for val in fila]) for fila in matDatos]) + "\n")
 
     # Pide al usuario el grado del polinomio
     while True:
